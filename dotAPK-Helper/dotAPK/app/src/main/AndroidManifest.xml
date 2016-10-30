@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="awaisking.dotapk">
+    <application android:fullBackupContent="true" android:allowBackup="true" android:label="dotAPK Helper" android:icon="@null">
+        <activity android:name=".Main" android:excludeFromRecents="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="awaisking" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
