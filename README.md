@@ -25,3 +25,8 @@
    [Primary]: <https://www.microsoft.com/download/details.aspx?id=6523>
    [Mirror]: <http://filehippo.com/download_dotnet_framework_2/>
    [Visual Studio]: <https://www.visualstudio.com/downloads/>
+
+---
+
+##### Thanks to :
+  - [Bin4ry](http://forum.xda-developers.com/member.php?u=1346722) - for his [root method](http://forum.xda-developers.com/showthread.php?t=1886460)
