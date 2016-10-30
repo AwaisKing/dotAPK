@@ -1,3 +1,5 @@
+![dotAPK Screenshot](https://raw.githubusercontent.com/AwaisKing/dotAPK/master/images/dotapk.png)
+
 # dotAPK
 #### A tool for installing and managing batch APK files.
 ---
