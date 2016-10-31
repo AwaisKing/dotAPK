@@ -39,6 +39,7 @@ Public Class BigDevices
                 adbPath = Application.StartupPath & "\files\adb.exe"
             End Try
         Next
+
         Shell(adbPath & " start-server", AppWinStyle.Hide, True)
 
         Dim rawOutput() As String = getRawOutput()

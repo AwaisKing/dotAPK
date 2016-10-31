@@ -6,7 +6,6 @@ Imports System.Text.RegularExpressions
 Public Class MainForm
     Public isDev As Boolean = False
     Public isMessageSeen As Boolean
-    Public Shared adbPath As String = Application.StartupPath & "\files\adb.exe"
 
     Private Sub Form1_DragDrop(sender As Object, e As DragEventArgs) Handles Me.DragDrop
         Try
@@ -237,6 +236,14 @@ Public Class MainForm
             Else
                 ' TODO: ADD BATCH INTSALLER
                 If isDev Then Console.WriteLine("bulkInstall: " & BigDevices.selectedDeviceIndex)
+                Dim apkList As New List(Of String())
+                For Each myItem As ListViewItem In ListView1.SelectedItems
+                    Dim apkPath As String = myItem.SubItems(6).Text
+                    If apkPath.Contains(":") Or apkPath.Contains("/") = False Then _
+                        apkList.Add(New String() {apkPath, myItem.SubItems(1).Text & ", " & myItem.SubItems(2).Text})
+                Next
+                Installer.apkList = apkList
+                Installer.Show()
             End If
         End If
     End Sub
