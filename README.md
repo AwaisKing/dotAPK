@@ -7,7 +7,7 @@
 ##### With this program, you can do:
   - Install batch apps.
   - Find duplicate apps and remove them.
-  - Get installed apps. *(has some issues getting all apps)*
+  - Get installed apps. *(~~has some issues getting all apps~~ - fixed)*
   - Get app info. *(working on getting permissions list)*
 
 ---
