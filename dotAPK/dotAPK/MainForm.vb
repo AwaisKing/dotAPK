@@ -392,11 +392,14 @@ Public Class MainForm
 
     Private Sub btnGetInstall_Click(sender As Object, e As EventArgs) Handles btnGetInstall.Click
         If isMessageSeen = False Then
-            MsgBox("READ THIS:" & vbNewLine & "There are some problems getting all installed apps, but in future updates I'll try to fix them." & vbNewLine & _
-                "Also there's source code available on GitHub if you want to fix too (help would be appreciated) :)" & vbNewLine & _
-                "----------------------------------" & vbNewLine & "If you are stuck at getting installed apps, that's probably because:" & vbNewLine & _
-                "1. You have a lot of apps (or)" & vbNewLine & "2. Your phone is locked and screen is off" & vbNewLine & "----------------------------------" & vbNewLine & _
-                "All you have to do is unlock phone and wait...")
+            'MsgBox("READ THIS:" & vbNewLine & "There are some problems getting all installed apps, but in future updates I'll try to fix them." & vbNewLine & _
+            '    "Also there's source code available on GitHub if you want to fix too (help would be appreciated) :)" & vbNewLine & _
+            '    "----------------------------------" & vbNewLine & "If you are stuck at getting installed apps, that's probably because:" & vbNewLine & _
+            '    "1. You have a lot of apps (or)" & vbNewLine & "2. Your phone is locked and screen is off" & vbNewLine & "----------------------------------" & vbNewLine & _
+            '    "All you have to do is unlock phone and wait...")
+            MsgBox("If you are stuck at getting installed apps, that's probably because:" & vbNewLine & _
+                "1. You have a lot of apps (or)" & vbNewLine & "2. Your phone is locked and screen is off" & vbNewLine & _
+                "----------------------------------" & vbNewLine & "All you have to do is unlock phone and wait...")
             isMessageSeen = True
         End If
 
@@ -463,14 +466,17 @@ Public Class MainForm
             Catch ex As Exception
             End Try
             Try
-                Shell(BigDevices.adbPath & " -s " & BigDevices.selectedDeviceSerial & " shell " & """" & "am force-stop awaisking.dotapk" & """", AppWinStyle.Hide, True)
-                Shell(BigDevices.adbPath & " -s " & BigDevices.selectedDeviceSerial & " shell " & """" & "pm disable awaisking.dotapk && pm enable awaisking.dotapk" & """", AppWinStyle.Hide, True)
-                Shell(BigDevices.adbPath & " -s " & BigDevices.selectedDeviceSerial & " shell " & """" & "logcat -c && am start -W -a android.intent.action.VIEW -c android.intent.category.BROWSABLE -d awaisking://dotapk" & """", AppWinStyle.Hide, True)
-                Shell(BigDevices.adbPath & " -s " & BigDevices.selectedDeviceSerial & " shell " & """" & "am force-stop awaisking.dotapk" & """", AppWinStyle.Hide, True)
-                Shell(BigDevices.adbPath & " -s " & BigDevices.selectedDeviceSerial & " shell " & """" & "pm disable awaisking.dotapk && pm enable awaisking.dotapk" & """", AppWinStyle.Hide, True)
+                'Shell(BigDevices.adbPath & " -s " & BigDevices.selectedDeviceSerial & " shell " & """" & "run-as awaisking.dot am force-stop awaisking.dotapk" & """", AppWinStyle.Hide, True)
+                'Shell(BigDevices.adbPath & " -s " & BigDevices.selectedDeviceSerial & " shell " & """" & "run-as awaisking.dot pm disable awaisking.dotapk && run-as awaisking.dot pm enable awaisking.dotapk" & """", AppWinStyle.Hide, True)
+                Shell(BigDevices.adbPath & " -s " & BigDevices.selectedDeviceSerial & " shell " & """" & "am broadcast -a awaisking.dotapk.STOP" & """", AppWinStyle.Hide, True)
+                Shell(BigDevices.adbPath & " -s " & BigDevices.selectedDeviceSerial & " shell " & """" & "am start -W -n awaisking.dotapk/awaisking.dotapk.Main" & """", AppWinStyle.Hide, True)
+                Shell(BigDevices.adbPath & " -s " & BigDevices.selectedDeviceSerial & " shell " & """" & "am broadcast -a awaisking.dotapk.STOP" & """", AppWinStyle.Hide, True)
+                'Shell(BigDevices.adbPath & " -s " & BigDevices.selectedDeviceSerial & " shell " & """" & "run-as awaisking.dot am force-stop awaisking.dotapk" & """", AppWinStyle.Hide, True)
+                'Shell(BigDevices.adbPath & " -s " & BigDevices.selectedDeviceSerial & " shell " & """" & "run-as awaisking.dot pm disable awaisking.dotapk && run-as awaisking.dot pm enable awaisking.dotapk" & """", AppWinStyle.Hide, True)
 
                 Dim oProcess As Process = New Process()
-                oProcess.StartInfo = New ProcessStartInfo(BigDevices.adbPath, " -s " & BigDevices.selectedDeviceSerial & " shell " & """" & "logcat -d -v long" & """") With {.UseShellExecute = False, .CreateNoWindow = True, .RedirectStandardOutput = True}
+                'oProcess.StartInfo = New ProcessStartInfo(BigDevices.adbPath, " -s " & BigDevices.selectedDeviceSerial & " shell " & """" & "logcat -d -v long" & """") With {.UseShellExecute = False, .CreateNoWindow = True, .RedirectStandardOutput = True}
+                oProcess.StartInfo = New ProcessStartInfo(BigDevices.adbPath, " -s " & BigDevices.selectedDeviceSerial & " shell " & """" & "run-as awaisking.dotapk cat /data/data/awaisking.dotapk/files/dotAPK.txt" & """") With {.UseShellExecute = False, .CreateNoWindow = True, .RedirectStandardOutput = True}
                 oProcess.Start()
                 Dim oStreamReader As StreamReader = oProcess.StandardOutput
                 Dim apps As String
@@ -508,11 +514,12 @@ Public Class MainForm
 
                         Dim appName As String = appContent(0)
                         Dim appPackage As String = appContent(1)
-                        Dim appVersion As String = appContent(2)
-                        Dim appTargetSdk As String = appContent(3)
-                        Dim appSourceDir As String = appContent(4).Substring(1, appContent(4).Length - 2).Split("|")(0)
-                        Dim appPublicSourceDir As String = appContent(4).Substring(1, appContent(4).Length - 2).Split("|")(1)
-                        Dim appIcon As Image = Image.FromStream(New MemoryStream(Convert.FromBase64String(appContent(5))))
+                        Dim apkSize As Decimal = Decimal.Parse(appContent(2))
+                        Dim appVersion As String = appContent(3)
+                        Dim appTargetSdk As String = appContent(4)
+                        Dim appSourceDir As String = appContent(5).Substring(1, appContent(5).Length - 2).Split("|")(0)
+                        Dim appPublicSourceDir As String = appContent(5).Substring(1, appContent(5).Length - 2).Split("|")(1)
+                        Dim appIcon As Image = Image.FromStream(New MemoryStream(Convert.FromBase64String(appContent(6))))
 
                         Dim apkPath As String = "<Error>"
                         If appSourceDir.Equals(appPublicSourceDir) Then apkPath = appSourceDir
@@ -525,20 +532,6 @@ Public Class MainForm
 
                         ListView1.LargeImageList.Images.Add(appName & appVersion, appIcon)
                         ListView1.SmallImageList.Images.Add(appName & appVersion, appIcon)
-
-                        Dim zProcess As Process = New Process()
-                        zProcess.StartInfo = New ProcessStartInfo(BigDevices.adbPath, " -s " & BigDevices.selectedDeviceSerial & " shell " & """" & "wc -c " & apkPath & """") With {.UseShellExecute = False, .CreateNoWindow = True, .RedirectStandardOutput = True}
-                        zProcess.Start()
-                        Dim zStreamReader As StreamReader = zProcess.StandardOutput
-                        Dim rawOutput As String = "0"
-                        Try
-                            rawOutput = zStreamReader.ReadToEnd()
-                        Catch ex As Exception
-                        Finally
-                            zStreamReader.Dispose()
-                            zStreamReader.Close()
-                        End Try
-                        Dim apkSize As Decimal = Decimal.Parse(rawOutput.Split(" ")(0))
 
                         Dim NewItem As ListViewItem = New ListViewItem(New String() {"", appName, appVersion, _
                                     Toolkit.ReadableSize(apkSize), appPackage, "<WIP>", apkPath, appTargetSdk}, appName & appVersion)

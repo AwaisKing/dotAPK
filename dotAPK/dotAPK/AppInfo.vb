@@ -50,6 +50,9 @@ Public NotInheritable Class AppInfo
             Me.placeholder8.Visible = False
             Me.placeholder3.Location = New Point(Me.placeholder3.Location.X, Me.placeholder2.Location.Y)
             Me.lblPackage.Location = New Point(Me.lblPackage.Location.X, Me.placeholder2.Location.Y)
+            Me.btnRemove.Visible = True
+        Else
+            Me.btnRemove.Visible = False
         End If
         MainForm.Enabled = False
         Me.Text = appName
@@ -100,9 +103,8 @@ Public NotInheritable Class AppInfo
     End Sub
 
     Private Sub btnRemove_Click(sender As Object, e As EventArgs) Handles btnRemove.Click
-        Dim adbPath As String = "adb"
         Dim oProcess As Process = New Process()
-        oProcess.StartInfo = New ProcessStartInfo(adbPath, "shell ""pm uninstall " & lblPackage.Text & """") With {.UseShellExecute = False, .CreateNoWindow = True, .RedirectStandardOutput = True}
+        oProcess.StartInfo = New ProcessStartInfo(BigDevices.adbPath, " -s " & BigDevices.selectedDeviceSerial & " uninstall " & lblPackage.Text & "") With {.UseShellExecute = False, .CreateNoWindow = True, .RedirectStandardOutput = True}
         oProcess.Start()
         Dim oStreamReader As StreamReader = oProcess.StandardOutput
         Dim rawOutput As String = ""
@@ -114,9 +116,19 @@ Public NotInheritable Class AppInfo
             oStreamReader.Close()
         End Try
         If rawOutput IsNot Nothing And rawOutput.Length > 0 And rawOutput.ToLower.Contains("success") Then
+            For i As Integer = MainForm.ListView1.Items.Count - 1 To 0 Step -1
+                If MainForm.ListView1.Items(i).Selected Then
+                    MainForm.ListView1.Items.Remove(MainForm.ListView1.Items(i))
+                    GC.Collect()
+                    If MainForm.isDev Then Console.WriteLine("removeSelected: " & _
+                        MainForm.ListView1.Items(i).SubItems.Item(1).Text & MainForm.ListView1.Items(i).SubItems.Item(2).Text & i & _
+                        " - " & MainForm.ListView1.SmallImageList.Images.Count)
+                End If
+            Next
             Me.Close()
         Else
             MsgBox(rawOutput)
+            Console.WriteLine(rawOutput)
         End If
     End Sub
 End Class

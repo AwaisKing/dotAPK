@@ -278,7 +278,7 @@ Partial Class AppInfo
         '
         'btnRemove
         '
-        Me.btnRemove.Location = New System.Drawing.Point(269, 123)
+        Me.btnRemove.Location = New System.Drawing.Point(269, 115)
         Me.btnRemove.Name = "btnRemove"
         Me.btnRemove.Size = New System.Drawing.Size(193, 34)
         Me.btnRemove.TabIndex = 0
