@@ -26,7 +26,7 @@ Partial Class Splash
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Splash))
         Me.pbdotAPK = New System.Windows.Forms.PictureBox()
         Me.tmrSlider = New System.Windows.Forms.Timer(Me.components)
-        Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
+        Me.splashIcons = New System.Windows.Forms.ImageList(Me.components)
         Me.tmrProgress = New System.Windows.Forms.Timer(Me.components)
         Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
         CType(Me.pbdotAPK, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -48,20 +48,20 @@ Partial Class Splash
         '
         Me.tmrSlider.Interval = 20
         '
-        'ImageList1
+        'splashIcons
         '
-        Me.ImageList1.ImageStream = CType(resources.GetObject("ImageList1.ImageStream"), System.Windows.Forms.ImageListStreamer)
-        Me.ImageList1.TransparentColor = System.Drawing.Color.Transparent
-        Me.ImageList1.Images.SetKeyName(0, "0")
-        Me.ImageList1.Images.SetKeyName(1, "1")
-        Me.ImageList1.Images.SetKeyName(2, "2")
-        Me.ImageList1.Images.SetKeyName(3, "3")
-        Me.ImageList1.Images.SetKeyName(4, "4")
-        Me.ImageList1.Images.SetKeyName(5, "5")
-        Me.ImageList1.Images.SetKeyName(6, "6")
-        Me.ImageList1.Images.SetKeyName(7, "7")
-        Me.ImageList1.Images.SetKeyName(8, "8")
-        Me.ImageList1.Images.SetKeyName(9, "9")
+        Me.splashIcons.ImageStream = CType(resources.GetObject("splashIcons.ImageStream"), System.Windows.Forms.ImageListStreamer)
+        Me.splashIcons.TransparentColor = System.Drawing.Color.Transparent
+        Me.splashIcons.Images.SetKeyName(0, "0")
+        Me.splashIcons.Images.SetKeyName(1, "1")
+        Me.splashIcons.Images.SetKeyName(2, "2")
+        Me.splashIcons.Images.SetKeyName(3, "3")
+        Me.splashIcons.Images.SetKeyName(4, "4")
+        Me.splashIcons.Images.SetKeyName(5, "5")
+        Me.splashIcons.Images.SetKeyName(6, "6")
+        Me.splashIcons.Images.SetKeyName(7, "7")
+        Me.splashIcons.Images.SetKeyName(8, "8")
+        Me.splashIcons.Images.SetKeyName(9, "9")
         '
         'tmrProgress
         '
@@ -100,9 +100,8 @@ Partial Class Splash
 
     End Sub
     Friend WithEvents pbdotAPK As System.Windows.Forms.PictureBox
-    Friend WithEvents tmrSlider As System.Windows.Forms.Timer
-    Friend WithEvents ImageList1 As System.Windows.Forms.ImageList
-    Friend WithEvents tmrProgress As System.Windows.Forms.Timer
     Friend WithEvents ProgressBar1 As System.Windows.Forms.ProgressBar
-
+    Private WithEvents tmrSlider As Timer
+    Private WithEvents splashIcons As ImageList
+    Private WithEvents tmrProgress As Timer
 End Class

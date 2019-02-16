@@ -4,7 +4,7 @@ Imports System.Linq
 Imports System.Text.RegularExpressions
 
 Public Class MainForm
-    Public isDev As Boolean = False
+    Public isDev As Boolean = True
     Public isMessageSeen As Boolean
 
     Private Sub Form1_DragDrop(sender As Object, e As DragEventArgs) Handles Me.DragDrop
@@ -16,15 +16,13 @@ Public Class MainForm
 
                 ' NO DUPS, MAN!!!
                 Try
-                    If ListView1.Items.Count > 0 Then
-                        Dim items As New List(Of ListViewItem)
-                        For Each item As ListViewItem In ListView1.Items
-                            items.Add(item)
-                        Next
-                        items = items.Where(Function(g) Trim(g.SubItems(6).Text) = Trim(path)).ToList
-                        If items.Count >= 1 Then
-                            Continue For
-                        End If
+                    If ListView1.Items.Count < 1 Then
+                        Continue For
+                    End If
+                    Dim xzx As Object = (From item As ListViewItem In ListView1.Items Let itemName = item.SubItems(6).Text
+                                             Where Trim(path) = Trim(itemName)).First()
+                    If xzx IsNot Nothing Then
+                        Continue For
                     End If
                 Catch ex As Exception
                 End Try
@@ -126,8 +124,8 @@ Public Class MainForm
                 ListView1.LargeImageList.Images.Add(appName & appVersion, getLargestImage())
                 ListView1.SmallImageList.Images.Add(appName & appVersion, getLargestImage())
 
-                Dim NewItem As ListViewItem = New ListViewItem(New String() {"", appName, appVersion, _
-                                "" + Toolkit.FormatFileSize(path), appPackage, _
+                Dim NewItem As ListViewItem = New ListViewItem(New String() {"", appName, appVersion,
+                                "" + Toolkit.FormatFileSize(path), appPackage,
                                 appDensities, path, apiVersion}, appName & appVersion)
                 ListView1.Items.Add(NewItem)
                 NewItem.Tag = ListView1.Items(ListView1.Items.Count - 1).Bounds.Y
@@ -144,113 +142,6 @@ Public Class MainForm
         If e.Data.GetDataPresent(DataFormats.FileDrop) Then
             e.Effect = DragDropEffects.Link
         End If
-    End Sub
-
-    Private Sub ListView1_ColumnWidthChanging(sender As Object, e As ColumnWidthChangingEventArgs) Handles ListView1.ColumnWidthChanging
-        If e.ColumnIndex = 0 Then
-            e.Cancel = True
-            e.NewWidth = 80
-        End If
-    End Sub
-
-    Private Sub ListView1_KeyDown(sender As Object, e As KeyEventArgs) Handles ListView1.KeyDown
-        If e.KeyCode = Keys.Delete Then
-            For i As Integer = Me.ListView1.Items.Count - 1 To 0 Step -1
-                If ListView1.Items(i).Selected Then
-                    Dim imageKey As String = ListView1.Items(i).SubItems.Item(1).Text & ListView1.Items(i).SubItems.Item(2).Text & i
-                    'largeList.Images.RemoveByKey(imageKey)
-                    'smallList.Images.RemoveByKey(imageKey)
-                    'ListView1.LargeImageList.Images.RemoveAt(ListView1.Items(i).ImageIndex)
-                    'ListView1.SmallImageList.Images.RemoveAt()
-                    ListView1.Items.Remove(ListView1.Items(i))
-                    GC.Collect()
-                    If isDev Then Console.WriteLine("lvKeyDown[Delete]: " & imageKey & " - " & ListView1.SmallImageList.Images.Count)
-                End If
-            Next
-        End If
-        If e.Control And (e.KeyCode = Keys.Delete Or e.KeyCode = Keys.Back) Then
-            ListView1.Items.Clear()
-            largeList.Images.Clear()
-            smallList.Images.Clear()
-            GC.Collect()
-        End If
-        If e.Control And e.KeyCode = Keys.A Then
-            For i As Integer = 0 To ListView1.Items.Count - 1
-                ListView1.Items(i).Selected = True
-            Next
-        End If
-    End Sub
-
-    Private Sub ListView1_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles ListView1.MouseDoubleClick
-        Dim imageKey As String = ListView1.GetItemAt(e.X, e.Y).SubItems(1).Text & ListView1.GetItemAt(e.X, e.Y).SubItems(2).Text
-        AppInfo.pbAppIcon.Image = largeList.Images(largeList.Images.IndexOfKey(imageKey))
-        AppInfo.appPath = """" & ListView1.GetItemAt(e.X, e.Y).SubItems(6).Text & """"
-        AppInfo.appName = ListView1.GetItemAt(e.X, e.Y).SubItems(1).Text
-        AppInfo.appVersion = ListView1.GetItemAt(e.X, e.Y).SubItems(2).Text
-        AppInfo.appDensities = ListView1.GetItemAt(e.X, e.Y).SubItems(5).Text
-        AppInfo.lblPackage.Text = ListView1.GetItemAt(e.X, e.Y).SubItems(4).Text
-
-        If ListView1.GetItemAt(e.X, e.Y).SubItems(5).Text.Equals("<WIP>") Then AppInfo.isInstalledApp = True
-
-        AppInfo.Show()
-    End Sub
-
-    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        If ListView1.Items.Count = 0 Then
-            Me.Text = "dotAPK"
-            ListView1.Items.Clear()
-            largeList.Images.Clear()
-            smallList.Images.Clear()
-        Else
-            Me.Text = "dotAPK - " & ListView1.Items.Count & " APKs added"
-        End If
-        lblBattery.Text = ProgressBar1.Value & "%"
-        If ProgressBar1.Value <= 15 Then
-            ProgressBar1.ForeColor = Color.Red
-        ElseIf ProgressBar1.Value <= 30 Then
-            ProgressBar1.ForeColor = Color.Orange
-        ElseIf ProgressBar1.Value <= 50 Then
-            ProgressBar1.ForeColor = Color.Blue
-        ElseIf ProgressBar1.Value <= 80 Then
-            ProgressBar1.ForeColor = Color.MediumSeaGreen
-        ElseIf ProgressBar1.Value <= 90 Then
-            ProgressBar1.ForeColor = Color.ForestGreen
-        ElseIf ProgressBar1.Value <= 100 Then
-            ProgressBar1.ForeColor = Color.LimeGreen
-        End If
-
-        Try
-            If Not bgWorker.IsBusy Then bgWorker.RunWorkerAsync()
-        Catch ex As Exception
-
-        End Try
-    End Sub
-
-    Private Sub btnInstallBulk_Click(sender As Object, e As EventArgs) Handles btnInstallBulk.Click
-        If ListView1.SelectedItems.Count = 0 Or ListView1.Items.Count = 0 Then
-            MsgBox("Please select one or more APK files to install.")
-        Else
-            If BigDevices.selectedDeviceIndex = -1 Then
-                BigDevices.fromForm = Me
-                BigDevices.Show()
-            Else
-                ' TODO: ADD BATCH INTSALLER
-                If isDev Then Console.WriteLine("bulkInstall: " & BigDevices.selectedDeviceIndex)
-                Dim apkList As New List(Of String())
-                For Each myItem As ListViewItem In ListView1.SelectedItems
-                    Dim apkPath As String = myItem.SubItems(6).Text
-                    If apkPath.Contains(":") Or apkPath.Contains("/") = False Then _
-                        apkList.Add(New String() {apkPath, myItem.SubItems(1).Text & ", " & myItem.SubItems(2).Text})
-                Next
-                Installer.apkList = apkList
-                Installer.Show()
-            End If
-        End If
-    End Sub
-
-    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-        BigDevices.fromForm = Me
-        BigDevices.Show()
     End Sub
 
     Private Sub MainForm_FormClosed(sender As Object, e As FormClosedEventArgs) Handles Me.FormClosed
@@ -284,7 +175,125 @@ Public Class MainForm
         End If
     End Sub
 
-    Private Sub bgWorker_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgWorker.DoWork
+    Private Sub ListView1_ColumnWidthChanging(sender As Object, e As ColumnWidthChangingEventArgs)
+        If e.ColumnIndex = 0 Then
+            e.Cancel = True
+            e.NewWidth = 80
+        End If
+    End Sub
+
+    Private Sub ListView1_KeyDown(sender As Object, e As KeyEventArgs)
+        If e.KeyCode = Keys.Delete Then
+
+            For Each i As Integer In ListView1.SelectedIndices
+                Dim item As ListViewItem = ListView1.SelectedItems(0)
+                'Dim imagekey As String = item.SubItems.Item(1).Text & item.SubItems.Item(2).Text & i
+                'largeList.Images.RemoveByKey(imagekey)
+                'smallList.Images.RemoveByKey(imagekey)
+                'ListView1.LargeImageList.Images.RemoveAt(ListView1.Items(i).ImageIndex)
+                ListView1.Items.Remove(ListView1.Items(i))
+                GC.Collect()
+                'If isDev Then Console.WriteLine("lvkeydown[delete]: " & imagekey & " - " & ListView1.SmallImageList.Images.Count)
+            Next
+            'For i As Integer = Me.ListView1.Items.Count - 1 To 0 Step -1
+            '    If ListView1.Items(i).Selected Then
+            '        Dim imageKey As String = ListView1.Items(i).SubItems.Item(1).Text & ListView1.Items(i).SubItems.Item(2).Text & i
+            '        'largeList.Images.RemoveByKey(imageKey)
+            '        'smallList.Images.RemoveByKey(imageKey)
+            '        'ListView1.LargeImageList.Images.RemoveAt(ListView1.Items(i).ImageIndex)
+            '        'ListView1.SmallImageList.Images.RemoveAt()
+            '        ListView1.Items.Remove(ListView1.Items(i))
+            '        GC.Collect()
+            '        If isDev Then Console.WriteLine("lvKeyDown[Delete]: " & imageKey & " - " & ListView1.SmallImageList.Images.Count)
+            '    End If
+            'Next
+        End If
+        If e.Control And (e.KeyCode = Keys.Delete Or e.KeyCode = Keys.Back) Then
+            ListView1.Items.Clear()
+            largeList.Images.Clear()
+            smallList.Images.Clear()
+            GC.Collect()
+        End If
+        If e.Control And e.KeyCode = Keys.A Then
+            For i As Integer = 0 To ListView1.Items.Count - 1
+                ListView1.Items(i).Selected = True
+            Next
+        End If
+    End Sub
+
+    Private Sub ListView1_MouseDoubleClick(sender As Object, e As MouseEventArgs)
+        Dim imageKey As String = ListView1.GetItemAt(e.X, e.Y).SubItems(1).Text & ListView1.GetItemAt(e.X, e.Y).SubItems(2).Text
+        AppInfo.pbAppIcon.Image = largeList.Images(largeList.Images.IndexOfKey(imageKey))
+        AppInfo.appPath = """" & ListView1.GetItemAt(e.X, e.Y).SubItems(6).Text & """"
+        AppInfo.appName = ListView1.GetItemAt(e.X, e.Y).SubItems(1).Text
+        AppInfo.appVersion = ListView1.GetItemAt(e.X, e.Y).SubItems(2).Text
+        AppInfo.appDensities = ListView1.GetItemAt(e.X, e.Y).SubItems(5).Text
+        AppInfo.lblPackage.Text = ListView1.GetItemAt(e.X, e.Y).SubItems(4).Text
+
+        If ListView1.GetItemAt(e.X, e.Y).SubItems(5).Text.Equals("<WIP>") Then AppInfo.isInstalledApp = True
+
+        AppInfo.Show()
+    End Sub
+
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs)
+        If ListView1.Items.Count = 0 Then
+            Me.Text = "dotAPK"
+            ListView1.Items.Clear()
+            largeList.Images.Clear()
+            smallList.Images.Clear()
+        Else
+            Me.Text = "dotAPK - " & ListView1.Items.Count & " APKs added"
+        End If
+        lblBattery.Text = ProgressBar1.Value & "%"
+        If ProgressBar1.Value <= 15 Then
+            ProgressBar1.ForeColor = Color.Red
+        ElseIf ProgressBar1.Value <= 30 Then
+            ProgressBar1.ForeColor = Color.Orange
+        ElseIf ProgressBar1.Value <= 50 Then
+            ProgressBar1.ForeColor = Color.Blue
+        ElseIf ProgressBar1.Value <= 80 Then
+            ProgressBar1.ForeColor = Color.MediumSeaGreen
+        ElseIf ProgressBar1.Value <= 90 Then
+            ProgressBar1.ForeColor = Color.ForestGreen
+        ElseIf ProgressBar1.Value <= 100 Then
+            ProgressBar1.ForeColor = Color.LimeGreen
+        End If
+
+        Try
+            If Not bgWorker.IsBusy Then bgWorker.RunWorkerAsync()
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub btnInstallBulk_Click(sender As Object, e As EventArgs)
+        If ListView1.SelectedItems.Count = 0 Or ListView1.Items.Count = 0 Then
+            MsgBox("Please select one or more APK files to install.")
+        Else
+            If BigDevices.selectedDeviceIndex = -1 Then
+                BigDevices.fromForm = Me
+                BigDevices.Show()
+            Else
+                ' TODO: ADD BATCH INTSALLER
+                If isDev Then Console.WriteLine("bulkInstall: " & BigDevices.selectedDeviceIndex)
+                Dim apkList As New List(Of String())
+                For Each myItem As ListViewItem In ListView1.SelectedItems
+                    Dim apkPath As String = myItem.SubItems(6).Text
+                    If apkPath.Contains(":") Or apkPath.Contains("/") = False Then _
+                        apkList.Add(New String() {apkPath, myItem.SubItems(1).Text & ", " & myItem.SubItems(2).Text})
+                Next
+                Installer.apkList = apkList
+                Installer.Show()
+            End If
+        End If
+    End Sub
+
+    Private Sub Button3_Click(sender As Object, e As EventArgs)
+        BigDevices.fromForm = Me
+        BigDevices.Show()
+    End Sub
+
+    Private Sub bgWorker_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs)
         Try
             If Not lblDeviceSelected.Text = "" Or Not lblDeviceSelected.Text = "UNKNOWN" Then
                 Dim oProcess As Process = New Process()
@@ -338,7 +347,7 @@ Public Class MainForm
         End Try
     End Sub
 
-    Private Sub ListView1_ItemDrag(sender As Object, e As ItemDragEventArgs) Handles ListView1.ItemDrag
+    Private Sub ListView1_ItemDrag(sender As Object, e As ItemDragEventArgs)
         Dim fileList As New Collections.Specialized.StringCollection
         For Each myItem As ListViewItem In ListView1.SelectedItems
             fileList.Add(myItem.SubItems(6).Text)
@@ -348,7 +357,7 @@ Public Class MainForm
         ListView1.DoDragDrop(dataObj, DragDropEffects.Copy)
     End Sub
 
-    Private Sub btnFindDups_Click(sender As Object, e As EventArgs) Handles btnFindDups.Click
+    Private Sub btnFindDups_Click(sender As Object, e As EventArgs)
         Dim items As New List(Of ListViewItem)
         Dim newItems As New List(Of ListViewItem)
         If ListView1.Items.Count >= 2 Then
@@ -390,15 +399,15 @@ Public Class MainForm
         Return xa
     End Function
 
-    Private Sub btnGetInstall_Click(sender As Object, e As EventArgs) Handles btnGetInstall.Click
+    Private Sub btnGetInstall_Click(sender As Object, e As EventArgs)
         If isMessageSeen = False Then
             'MsgBox("READ THIS:" & vbNewLine & "There are some problems getting all installed apps, but in future updates I'll try to fix them." & vbNewLine & _
             '    "Also there's source code available on GitHub if you want to fix too (help would be appreciated) :)" & vbNewLine & _
             '    "----------------------------------" & vbNewLine & "If you are stuck at getting installed apps, that's probably because:" & vbNewLine & _
             '    "1. You have a lot of apps (or)" & vbNewLine & "2. Your phone is locked and screen is off" & vbNewLine & "----------------------------------" & vbNewLine & _
             '    "All you have to do is unlock phone and wait...")
-            MsgBox("If you are stuck at getting installed apps, that's probably because:" & vbNewLine & _
-                "1. You have a lot of apps (or)" & vbNewLine & "2. Your phone is locked and screen is off" & vbNewLine & _
+            MsgBox("If you are stuck at getting installed apps, that's probably because:" & vbNewLine &
+                "1. You have a lot of apps (or)" & vbNewLine & "2. Your phone is locked and screen is off" & vbNewLine &
                 "----------------------------------" & vbNewLine & "All you have to do is unlock phone and wait...")
             isMessageSeen = True
         End If
@@ -533,7 +542,7 @@ Public Class MainForm
                         ListView1.LargeImageList.Images.Add(appName & appVersion, appIcon)
                         ListView1.SmallImageList.Images.Add(appName & appVersion, appIcon)
 
-                        Dim NewItem As ListViewItem = New ListViewItem(New String() {"", appName, appVersion, _
+                        Dim NewItem As ListViewItem = New ListViewItem(New String() {"", appName, appVersion,
                                     Toolkit.ReadableSize(apkSize), appPackage, "<WIP>", apkPath, appTargetSdk}, appName & appVersion)
                         ListView1.Items.Add(NewItem)
                         NewItem.Tag = ListView1.Items(ListView1.Items.Count - 1).Bounds.Y
@@ -544,7 +553,7 @@ Public Class MainForm
         End If
     End Sub
 
-    Private Sub btnRemSel_Click(sender As Object, e As EventArgs) Handles btnRemSel.Click
+    Private Sub btnRemSel_Click(sender As Object, e As EventArgs)
         For i As Integer = Me.ListView1.Items.Count - 1 To 0 Step -1
             If ListView1.Items(i).Selected Then
                 Dim imageKey As String = ListView1.Items(i).SubItems.Item(1).Text & ListView1.Items(i).SubItems.Item(2).Text & i
@@ -559,7 +568,7 @@ Public Class MainForm
         Next
     End Sub
 
-    Private Sub btnDelSel_Click(sender As Object, e As EventArgs) Handles btnDelSel.Click
+    Private Sub btnDelSel_Click(sender As Object, e As EventArgs)
         For i As Integer = Me.ListView1.Items.Count - 1 To 0 Step -1
             If ListView1.Items(i).Selected Then
                 Dim selItem As ListViewItem = ListView1.Items(i)

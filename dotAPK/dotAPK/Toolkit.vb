@@ -7,7 +7,9 @@ Module Toolkit
         Try
             Dim root As String = My.Computer.FileSystem.SpecialDirectories.Temp & "\dotAPK_TEMP_FILES"
             Dim fileList = New DirectoryInfo(root).GetFiles("*.*", SearchOption.AllDirectories)
-            Dim xFile As FileInfo = (From file In fileList Let filelength = GetFileLength(file) Where filelength > 0 Order By filelength Descending Select file).First
+            Dim xFile As FileInfo = (From file In fileList Let fileLen = file.Length, fileDir = file.DirectoryName
+                                     Where fileLen > 0 AndAlso (fileDir.Contains("mipmap") Or fileDir.Contains("drawable"))
+                                     Order By fileLen Descending Select file).First
 
             Using imagePath As FileStream = xFile.Open(FileMode.Open)
                 Return Image.FromStream(imagePath)
@@ -17,10 +19,10 @@ Module Toolkit
         End Try
     End Function
 
-    Function GetFileLength(ByVal fi As System.IO.FileInfo) As Long
+    Function GetFileLength(ByRef fi As FileInfo) As Long
         Try
             Return fi.Length
-        Catch ex As FileNotFoundException
+        Catch ex As Exception
             Return 0
         End Try
     End Function

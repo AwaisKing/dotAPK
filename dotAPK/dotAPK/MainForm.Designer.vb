@@ -27,14 +27,6 @@ Partial Class MainForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
-        Me.ListView1 = New System.Windows.Forms.ListView()
-        Me.appIcon = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.appName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.appVersion = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.appSize = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.appPackage = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.largeList = New System.Windows.Forms.ImageList(Me.components)
-        Me.smallList = New System.Windows.Forms.ImageList(Me.components)
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.Button10 = New System.Windows.Forms.Button()
         Me.Button9 = New System.Windows.Forms.Button()
@@ -50,69 +42,23 @@ Partial Class MainForm
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.lblDeviceSelected = New System.Windows.Forms.Label()
-        Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
+        Me.ListView1 = New System.Windows.Forms.ListView()
+        Me.appIcon = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.appName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.appVersion = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.appSize = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.appPackage = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.largeList = New System.Windows.Forms.ImageList(Me.components)
+        Me.smallList = New System.Windows.Forms.ImageList(Me.components)
         Me.lblBattery = New System.Windows.Forms.Label()
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
+        Me.lblDeviceSelected = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
         Me.bgWorker = New System.ComponentModel.BackgroundWorker()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.SuspendLayout()
-        '
-        'ListView1
-        '
-        Me.ListView1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ListView1.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.appIcon, Me.appName, Me.appVersion, Me.appSize, Me.appPackage})
-        Me.ListView1.FullRowSelect = True
-        Me.ListView1.HideSelection = False
-        Me.ListView1.LargeImageList = Me.largeList
-        Me.ListView1.Location = New System.Drawing.Point(12, 33)
-        Me.ListView1.Name = "ListView1"
-        Me.ListView1.Size = New System.Drawing.Size(732, 377)
-        Me.ListView1.SmallImageList = Me.smallList
-        Me.ListView1.TabIndex = 0
-        Me.ListView1.UseCompatibleStateImageBehavior = False
-        Me.ListView1.View = System.Windows.Forms.View.Details
-        '
-        'appIcon
-        '
-        Me.appIcon.Text = "Icon"
-        Me.appIcon.Width = 80
-        '
-        'appName
-        '
-        Me.appName.Text = "Name"
-        Me.appName.Width = 372
-        '
-        'appVersion
-        '
-        Me.appVersion.Text = "Version"
-        Me.appVersion.Width = 85
-        '
-        'appSize
-        '
-        Me.appSize.Text = "Size"
-        Me.appSize.Width = 65
-        '
-        'appPackage
-        '
-        Me.appPackage.Text = "Package Name"
-        Me.appPackage.Width = 110
-        '
-        'largeList
-        '
-        Me.largeList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit
-        Me.largeList.ImageSize = New System.Drawing.Size(128, 128)
-        Me.largeList.TransparentColor = System.Drawing.Color.Transparent
-        '
-        'smallList
-        '
-        Me.smallList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit
-        Me.smallList.ImageSize = New System.Drawing.Size(63, 63)
-        Me.smallList.TransparentColor = System.Drawing.Color.Transparent
         '
         'GroupBox1
         '
@@ -130,10 +76,10 @@ Partial Class MainForm
         Me.GroupBox1.Controls.Add(Me.btnInstallBulk)
         Me.GroupBox1.Controls.Add(Me.Label2)
         Me.GroupBox1.Controls.Add(Me.GroupBox2)
-        Me.GroupBox1.Location = New System.Drawing.Point(-3, 416)
+        Me.GroupBox1.Location = New System.Drawing.Point(-1, 404)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(766, 105)
-        Me.GroupBox1.TabIndex = 1
+        Me.GroupBox1.Size = New System.Drawing.Size(758, 105)
+        Me.GroupBox1.TabIndex = 12
         Me.GroupBox1.TabStop = False
         '
         'Button10
@@ -248,7 +194,7 @@ Partial Class MainForm
         Me.GroupBox2.Controls.Add(Me.Button2)
         Me.GroupBox2.Controls.Add(Me.Button1)
         Me.GroupBox2.Controls.Add(Me.Label1)
-        Me.GroupBox2.Location = New System.Drawing.Point(583, 0)
+        Me.GroupBox2.Location = New System.Drawing.Point(575, 0)
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(187, 105)
         Me.GroupBox2.TabIndex = 2
@@ -286,48 +232,99 @@ Partial Class MainForm
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "Toolbox"
         '
+        'ListView1
+        '
+        Me.ListView1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ListView1.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.appIcon, Me.appName, Me.appVersion, Me.appSize, Me.appPackage})
+        Me.ListView1.FullRowSelect = True
+        Me.ListView1.HideSelection = False
+        Me.ListView1.LargeImageList = Me.largeList
+        Me.ListView1.Location = New System.Drawing.Point(14, 33)
+        Me.ListView1.Name = "ListView1"
+        Me.ListView1.Size = New System.Drawing.Size(724, 365)
+        Me.ListView1.SmallImageList = Me.smallList
+        Me.ListView1.TabIndex = 11
+        Me.ListView1.UseCompatibleStateImageBehavior = False
+        Me.ListView1.View = System.Windows.Forms.View.Details
+        '
+        'appIcon
+        '
+        Me.appIcon.Text = "Icon"
+        Me.appIcon.Width = 80
+        '
+        'appName
+        '
+        Me.appName.Text = "Name"
+        Me.appName.Width = 372
+        '
+        'appVersion
+        '
+        Me.appVersion.Text = "Version"
+        Me.appVersion.Width = 85
+        '
+        'appSize
+        '
+        Me.appSize.Text = "Size"
+        Me.appSize.Width = 65
+        '
+        'appPackage
+        '
+        Me.appPackage.Text = "Package Name"
+        Me.appPackage.Width = 110
+        '
+        'largeList
+        '
+        Me.largeList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit
+        Me.largeList.ImageSize = New System.Drawing.Size(128, 128)
+        Me.largeList.TransparentColor = System.Drawing.Color.Transparent
+        '
+        'smallList
+        '
+        Me.smallList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit
+        Me.smallList.ImageSize = New System.Drawing.Size(63, 63)
+        Me.smallList.TransparentColor = System.Drawing.Color.Transparent
+        '
+        'lblBattery
+        '
+        Me.lblBattery.Location = New System.Drawing.Point(606, 9)
+        Me.lblBattery.Name = "lblBattery"
+        Me.lblBattery.Size = New System.Drawing.Size(34, 13)
+        Me.lblBattery.TabIndex = 16
+        Me.lblBattery.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'Timer1
         '
         Me.Timer1.Enabled = True
         Me.Timer1.Interval = 20
         '
-        'Label3
+        'ProgressBar1
         '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(9, 9)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(89, 13)
-        Me.Label3.TabIndex = 2
-        Me.Label3.Text = "Selected Device:"
+        Me.ProgressBar1.ForeColor = System.Drawing.Color.SteelBlue
+        Me.ProgressBar1.Location = New System.Drawing.Point(646, 9)
+        Me.ProgressBar1.Name = "ProgressBar1"
+        Me.ProgressBar1.Size = New System.Drawing.Size(100, 13)
+        Me.ProgressBar1.TabIndex = 15
         '
         'lblDeviceSelected
         '
         Me.lblDeviceSelected.AutoSize = True
         Me.lblDeviceSelected.ForeColor = System.Drawing.Color.Red
-        Me.lblDeviceSelected.Location = New System.Drawing.Point(101, 9)
+        Me.lblDeviceSelected.Location = New System.Drawing.Point(103, 9)
         Me.lblDeviceSelected.Name = "lblDeviceSelected"
         Me.lblDeviceSelected.Size = New System.Drawing.Size(93, 13)
-        Me.lblDeviceSelected.TabIndex = 2
+        Me.lblDeviceSelected.TabIndex = 13
         Me.lblDeviceSelected.Text = "SELECT DEVICE!"
         '
-        'ProgressBar1
+        'Label3
         '
-        Me.ProgressBar1.ForeColor = System.Drawing.Color.SteelBlue
-        Me.ProgressBar1.Location = New System.Drawing.Point(644, 9)
-        Me.ProgressBar1.Name = "ProgressBar1"
-        Me.ProgressBar1.Size = New System.Drawing.Size(100, 13)
-        Me.ProgressBar1.TabIndex = 3
-        '
-        'lblBattery
-        '
-        Me.lblBattery.Location = New System.Drawing.Point(604, 9)
-        Me.lblBattery.Name = "lblBattery"
-        Me.lblBattery.Size = New System.Drawing.Size(34, 13)
-        Me.lblBattery.TabIndex = 4
-        Me.lblBattery.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'bgWorker
-        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(11, 9)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(89, 13)
+        Me.Label3.TabIndex = 14
+        Me.Label3.Text = "Selected Device:"
         '
         'MainForm
         '
@@ -335,14 +332,14 @@ Partial Class MainForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(756, 518)
+        Me.Controls.Add(Me.GroupBox1)
+        Me.Controls.Add(Me.ListView1)
         Me.Controls.Add(Me.lblBattery)
         Me.Controls.Add(Me.ProgressBar1)
         Me.Controls.Add(Me.lblDeviceSelected)
         Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.GroupBox1)
-        Me.Controls.Add(Me.ListView1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.MinimumSize = New System.Drawing.Size(764, 545)
+        Me.MinimumSize = New System.Drawing.Size(772, 557)
         Me.Name = "MainForm"
         Me.Text = "dotAPK"
         Me.GroupBox1.ResumeLayout(False)
@@ -353,33 +350,34 @@ Partial Class MainForm
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents ListView1 As System.Windows.Forms.ListView
-    Friend WithEvents smallList As System.Windows.Forms.ImageList
-    Friend WithEvents largeList As System.Windows.Forms.ImageList
-    Friend WithEvents appIcon As System.Windows.Forms.ColumnHeader
-    Friend WithEvents appName As System.Windows.Forms.ColumnHeader
-    Friend WithEvents appVersion As System.Windows.Forms.ColumnHeader
-    Friend WithEvents appSize As System.Windows.Forms.ColumnHeader
-    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
-    Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
-    Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents Button2 As System.Windows.Forms.Button
-    Friend WithEvents Button1 As System.Windows.Forms.Button
-    Friend WithEvents Timer1 As System.Windows.Forms.Timer
-    Friend WithEvents appPackage As System.Windows.Forms.ColumnHeader
-    Friend WithEvents btnInstallBulk As System.Windows.Forms.Button
-    Friend WithEvents Button10 As System.Windows.Forms.Button
-    Friend WithEvents Button9 As System.Windows.Forms.Button
-    Friend WithEvents btnGetInstall As System.Windows.Forms.Button
-    Friend WithEvents Button8 As System.Windows.Forms.Button
-    Friend WithEvents btnRemSel As System.Windows.Forms.Button
-    Friend WithEvents btnDelSel As System.Windows.Forms.Button
-    Friend WithEvents btnFindDups As System.Windows.Forms.Button
-    Friend WithEvents Button3 As System.Windows.Forms.Button
-    Friend WithEvents Label3 As System.Windows.Forms.Label
-    Friend WithEvents lblDeviceSelected As System.Windows.Forms.Label
-    Friend WithEvents ProgressBar1 As System.Windows.Forms.ProgressBar
-    Friend WithEvents lblBattery As System.Windows.Forms.Label
+
+    Friend WithEvents GroupBox1 As GroupBox
+    Friend WithEvents Button10 As Button
+    Friend WithEvents Button9 As Button
+    Friend WithEvents btnGetInstall As Button
+    Friend WithEvents Button8 As Button
+    Friend WithEvents btnRemSel As Button
+    Friend WithEvents btnDelSel As Button
+    Friend WithEvents btnFindDups As Button
+    Friend WithEvents Button3 As Button
+    Friend WithEvents btnInstallBulk As Button
+    Friend WithEvents Label2 As Label
+    Friend WithEvents GroupBox2 As GroupBox
+    Friend WithEvents Button2 As Button
+    Friend WithEvents Button1 As Button
+    Friend WithEvents Label1 As Label
+    Friend WithEvents ListView1 As ListView
+    Friend WithEvents appIcon As ColumnHeader
+    Friend WithEvents appName As ColumnHeader
+    Friend WithEvents appVersion As ColumnHeader
+    Friend WithEvents appSize As ColumnHeader
+    Friend WithEvents appPackage As ColumnHeader
+    Friend WithEvents largeList As ImageList
+    Friend WithEvents smallList As ImageList
+    Friend WithEvents lblBattery As Label
+    Friend WithEvents Timer1 As Timer
+    Friend WithEvents ProgressBar1 As ProgressBar
+    Friend WithEvents lblDeviceSelected As Label
+    Friend WithEvents Label3 As Label
     Friend WithEvents bgWorker As System.ComponentModel.BackgroundWorker
 End Class

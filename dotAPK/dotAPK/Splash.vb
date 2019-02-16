@@ -4,7 +4,7 @@
 
     Private Sub Splash_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         tmrSlider.Start()
-        pbdotAPK.Image = ImageList1.Images(0)
+        pbdotAPK.Image = splashIcons.Images(0)
         For Each p As Process In Process.GetProcesses
             Try
                 If p.ProcessName.Equals("adb") Then
@@ -21,10 +21,10 @@
 
     Private Sub tmrSlider_Tick(sender As Object, e As EventArgs) Handles tmrSlider.Tick
         If i >= 9 Then
-            pbdotAPK.Image = ImageList1.Images(9)
+            pbdotAPK.Image = splashIcons.Images(9)
             tmrSlider.Enabled = False
         Else
-            pbdotAPK.Image = ImageList1.Images(i)
+            pbdotAPK.Image = splashIcons.Images(i)
         End If
         i += 1
     End Sub
@@ -35,7 +35,7 @@
         Else
             tmrProgress.Stop()
             tmrSlider.Stop()
-            Me.Close()
+            Close()
             MainForm.Show()
             MainForm.ShowInTaskbar = True
             MainForm.Visible = True
